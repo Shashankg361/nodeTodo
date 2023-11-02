@@ -86,14 +86,15 @@ const addToken = async(UserName)=>{
         const token = jwt.sign({ Username: UserName }, secretKey, { expiresIn: '1h' });
         const tokendata = {Username: UserName , token :token , secretKey : secretKey}
         const response = getDocs(q)
-        const doucment = response.docs
-        if(!doucment)
+        const document = response.docs
+        console.log('checking user ',document )
+        if(!document)
         { try
-        {const storeToken = await addDoc(collectionRef , tokendata)
-        console.log('Token created successfully with doc id ' , storeToken.id)}
-        catch(error){
-            console.log('error occurred ', error)
-        }
+            {const storeToken = await addDoc(collectionRef , tokendata)
+            console.log('Token created successfully with doc id ' , storeToken.id)}
+          catch(error){
+                console.log('error occurred ', error)
+            }
         } else{
             const documentRef = collectionRef.doc(document[0].id)
             try

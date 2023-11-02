@@ -1,7 +1,6 @@
-
 import { userState } from "@/pages/_app"
 import axios from "axios"
-import { useContext, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { useRef } from "react"
 import { useRouter } from "next/router"
 
@@ -12,7 +11,12 @@ export default function Login(){
     const [Password , setPassword] = useState('')
     const loginform = useRef(null)
     const router = useRouter()
-
+    useEffect(()=>{
+            console.log('login ',loggedIn)
+            if(loggedIn){
+                router.push('/')
+        }
+    },[loggedIn])
     console.log('user ' , UserName  )
 
     const handleSubmit = async (event) =>{
@@ -25,10 +29,8 @@ export default function Login(){
         console.log('loooooog', loggedIn)
         console.log('message ' , response.data.message)
 
-        console.log('login ',loggedIn)
-        if(loggedIn){
-            router.push('/')
-        }
+        
+        
     
     }catch(error){
         console.error(error)

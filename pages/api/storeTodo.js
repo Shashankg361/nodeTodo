@@ -1,15 +1,16 @@
 import { firestore } from "@/firebase/handleDatabase"
 import { addDoc, collection, doc, getDoc } from "firebase/firestore"
-import getTodo from "./getTodo"
+//import getTodo from "./getTodo"
 
 export default async (req,res)=>{
     if(req.method == 'POST'){
         const {Todo , UserName} = req.body
+        console.log('todo - - ',Todo , 'UserName - ' ,UserName)
         const UserData = {Todo :Todo , Username :UserName} 
-        const response = storedata(UserData)
+        const response = await storedata(UserData)
         console.log('Stored todo data' , response)
-        const storedTodo = getTodo(response.id)
-        return res.status(200).json({Data: storedTodo,message:'Data added succesfully'})
+        const storedTodo = await getTodo(response)
+        return res.status(200).json({Data: storedTodo ,message:'Data added succesfully'})
     }
 }
 const storedata = async(UserData)=>{
@@ -23,8 +24,9 @@ const storedata = async(UserData)=>{
 }
 
 const getTodo = async(docId)=>{
-    const documentRef = doc(firestore , 'TODOs' , docId)
+    
     try{
+        const documentRef = doc(firestore , 'TODOs' , docId)
         const response = await getDoc(documentRef)
         const StoredTodo = response.data()
         return StoredTodo

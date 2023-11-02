@@ -7,22 +7,27 @@ export default function TodoSection(){
     const [loginAck , setLoginAck] = useState('Do Login')
     const [Todos , setTodos] = useState([])
     const [Todo , setTodo] = useState('');
-    var UserName = ''
+    const [UserName , setUserName] = useState('')
+    
     useEffect(()=>{
-        fetchData
-    },[])
+        fetchData()
+    },[loggedIn])
 
     const fetchData = async ()=>{
         if (typeof window !== 'undefined') {
             const Username = localStorage.getItem('Username');
-            UserName = Username
+           setUserName(Username)
         }
 
         if(UserName){
-            const response = await axios.post('/api/getTodo',UserName)
+            const response = await axios.post('/api/getTodo',{UserName})
             const data = response.data
+            const docs = data.todoData
+            data.forEach(doc => {
+                console.log(doc.data())
+            });
             setTodos(data)
-            console.log(Todos)
+            console.log('tooooods',Todos)
             setLoggedIn(data.message)
             data.message ? setLoginAck('Wellcom!! ',UserName): setLoginAck('Session expired Please Login')
         }else{
@@ -36,10 +41,11 @@ export default function TodoSection(){
         console.log(loggedIn)
         if(loggedIn){
             const response = await axios.post('/api/storeTodo',{Todo , UserName})
-            data = response.data
+            const data = response.data
             console.log('todo - ' , data) 
-            setTodos([...Todos , data])
-            console.log('working')
+            console.log(Todos)
+            setTodos([...Todos , data.Todo])
+            
             setLoginAck('Wellcom!! ',UserName)
         }else{
             setLoginAck('Do Login ',UserName)
@@ -57,10 +63,14 @@ export default function TodoSection(){
             
             <div className=" bg-white m-3 text-black ">
                 <h1>{loginAck}</h1>
-                {Todos.map((todoObj)=>{
+                {(Todos.length >0 && Todos.map((todoObj)=>{
                     return<h1>Your Work : {todoObj.Todo}</h1>
-                })}
+                }))}
             </div>
         </div>
     </>
+}
+
+export async function getServerSideProps(){
+
 }
