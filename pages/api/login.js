@@ -1,5 +1,5 @@
 import { firestore } from "@/firebase/handleDatabase"
-import { addDoc, collection ,getDocs,query , where} from "firebase/firestore"
+import { addDoc, collection ,doc,getDocs,query , updateDoc, where} from "firebase/firestore"
 
 
 const bcrypt = require('bcrypt')
@@ -15,7 +15,7 @@ export default async(req,res)=>{
         console.log("username - ",UserName)
         const data = await handleDatabase({UserName , Password})
 
-        console.log("snapshot - ",data[0].data())
+        //    console.log("snapshot - ",data[0].data())
         if(data){
             var createSession = calculation(data , Password);
         }else{
@@ -25,8 +25,13 @@ export default async(req,res)=>{
         //console.log(data[0].data)
 
         if(createSession){
-            addToken(UserName)
-            res.status(200).json({ Username: UserName, message:true});
+            try{
+                await addToken(UserName)
+                res.status(200).json({ Username: UserName, message:true});
+            }catch(error){
+                res.json({ Username: UserName, message:false})
+            }
+            
         }else{
             res.status(401).json({message:"Incorrect Password"})
         }
@@ -49,7 +54,7 @@ const handleDatabase = async ({UserName , Password})=>{
             return document
         }else{
             return false
-        }
+        } 
         
     }
     catch(error){
@@ -82,24 +87,25 @@ const calculation = (doc ,Password)=>{
 
 const addToken = async(UserName)=>{
         const collectionRef = collection(firestore , 'LoginUsersTokens')
-        const q = query(collectionRef , where('username','==' , UserName))
+        const q = query(collectionRef , where('Username','==' , UserName))
         const token = jwt.sign({ Username: UserName }, secretKey, { expiresIn: '1h' });
         const tokendata = {Username: UserName , token :token , secretKey : secretKey}
-        const response = getDocs(q)
+        const response = await getDocs(q)
+        //console.log('token respons - ' ,response)
         const document = response.docs
         console.log('checking user ',document )
-        if(!document)
-        { try
-            {const storeToken = await addDoc(collectionRef , tokendata)
-            console.log('Token created successfully with doc id ' , storeToken.id)}
-          catch(error){
+        if(!(document.length > 0))
+        { try{
+            const storeToken = await addDoc(collectionRef , tokendata)
+            console.log('Token created successfully with doc id ' , storeToken.id)
+          }catch(error){
                 console.log('error occurred ', error)
             }
         } else{
-            const documentRef = collectionRef.doc(document[0].id)
+            const documentRef = doc(collectionRef , document[0].id)
             try
-            {await documentRef.updated(tokendata.token , tokendata.secretKey)
-                console.log('token updated successfully ')
+            {   const updateAck = await updateDoc(documentRef , {token : tokendata.token , secretKey :tokendata.secretKey})
+                console.log('token updated successfully ' , updateAck)
             }
             catch(error){
                 console.log('error occured', error)

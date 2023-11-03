@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken')
 export default async(req , res)=>{
     if(req.method === 'POST'){
         const {UserName} = req.body
-        //console.log('Name ',UserName)
+        console.log('gettodo Name ',UserName)
         const collectionRef = collection(firestore , 'LoginUsersTokens')
         const q = query(collectionRef , where('Username' , '==' ,UserName ))
         const snapshot = await getDocs(q)
@@ -15,12 +15,19 @@ export default async(req , res)=>{
             console.log('Datataaaa - ',doc.data())
         })
         const data = document[0].data()
-        if(validateToken(data)){
-            const todoData = getTodoDoc(UserName)
-            console.log(todoData)
-            res.status(200).json({todoData , message:true})
+        if(!validateToken(data)){
+            const docArray = []
+            console.log('enterd ')
+            const todoData = await getTodoDoc(UserName)
+            const document = todoData.docs
+            document.forEach((doc)=>{
+                docArray.push(doc.data())
+                console.log('tododoooo ',doc.data())
+            })
+            
+            res.status(200).json({docArray , message:true})
         }else{
-            res.json({ message: false });
+            res.json({ message: false });1
         }
     }
 
@@ -29,18 +36,20 @@ export default async(req , res)=>{
 const validateToken = (data)=>{
     const token = data.token
     const secretKey = data.secretKey
-    const decoded = jwt.verify(token , secretKey)
-    if(decoded.exp <= Date.now() / 1000){
+    try{
+        const decoded = jwt.verify(token , secretKey)
         return false
-    }else{
+    }catch(error){
         return true
     }
+    
+    
 }
-1
+
 const getTodoDoc = async (UserName)=>{
     const collectionRef = collection(firestore , 'TODOs')
-    const q = query(collectionRef , 'Username' , '==' , UserName)
+    const q = query(collectionRef , where('Username' , '==' , UserName))
     const todoData = await getDocs(q)
-    const doucment = todoData.docs
-    return doucment
+    
+    return todoData
 }

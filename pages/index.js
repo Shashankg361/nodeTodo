@@ -1,9 +1,6 @@
 import Nav from '@/components/navbar'
 import TodoSection from '@/components/todoSection'
 import { Inter } from 'next/font/google'
-import Link from 'next/link'
-
-
 
 
 const inter = Inter({ subsets: ['latin'] })

@@ -9,8 +9,9 @@ export default async (req,res)=>{
         const UserData = {Todo :Todo , Username :UserName} 
         const response = await storedata(UserData)
         console.log('Stored todo data' , response)
-        const storedTodo = await getTodo(response)
-        return res.status(200).json({Data: storedTodo ,message:'Data added succesfully'})
+        const getResponse = await getTodo(response)
+        const StoredTodo = getResponse.data()
+        return res.status(200).json({Data: StoredTodo ,message:'Data added succesfully'})
     }
 }
 const storedata = async(UserData)=>{
@@ -28,8 +29,8 @@ const getTodo = async(docId)=>{
     try{
         const documentRef = doc(firestore , 'TODOs' , docId)
         const response = await getDoc(documentRef)
-        const StoredTodo = response.data()
-        return StoredTodo
+        
+        return response
 
     }catch(error){
         throw error

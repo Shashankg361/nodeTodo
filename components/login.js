@@ -6,17 +6,18 @@ import { useRouter } from "next/router"
 
 export default function Login(){
     const {loggedIn , setLoggedIn} = useContext(userState)
-
+    var passwordVerified = true
     const [UserName , setUsername] = useState('')
     const [Password , setPassword] = useState('')
     const loginform = useRef(null)
     const router = useRouter()
-    useEffect(()=>{
+     useEffect(()=>{
             console.log('login ',loggedIn)
             if(loggedIn){
                 router.push('/')
         }
     },[loggedIn])
+
     console.log('user ' , UserName  )
 
     const handleSubmit = async (event) =>{
@@ -26,12 +27,10 @@ export default function Login(){
         const response = await axios.post('/api/login',{UserName , Password})
         localStorage.setItem("Username" , response.data.Username)
         setLoggedIn(response.data.message)
-        console.log('loooooog', loggedIn)
-        console.log('message ' , response.data.message)
+        passwordVerified = response.data.message
+        //console.log('loooooog', loggedIn)
+        //console.log('message ' , response.data.message)
 
-        
-        
-    
     }catch(error){
         console.error(error)
         throw error
@@ -49,6 +48,7 @@ export default function Login(){
                     <label id="Password">Password</label>
                     <input type="password" className="m-2 text-black" id="Password" placeholder="Username/Email" onChange={(e)=>{setPassword(e.target.value)}}></input>
                 </div>
+                <div>{!passwordVerified && <h1>Incorrect Password</h1>}</div>
                 <input type="submit"></input>
                 
             </form> 

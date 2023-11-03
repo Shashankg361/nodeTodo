@@ -7,29 +7,44 @@ export default function TodoSection(){
     const [loginAck , setLoginAck] = useState('Do Login')
     const [Todos , setTodos] = useState([])
     const [Todo , setTodo] = useState('');
-    const [UserName , setUserName] = useState('')
+    var UserName = ''
     
     useEffect(()=>{
-        fetchData()
-    },[loggedIn])
+        
+        if (typeof window !== 'undefined' && localStorage.getItem('Username') ) {
+            //setUserName(localStorage.getItem('Username'))
+            UserName= localStorage.getItem('Username')
+            console.log('I am in useEffect',UserName)
+        }
+        //setUserName(username)
+        console.log(UserName)
+        if(UserName){
+            console.log('TodoStore - ',UserName)
+            fetchData()
+        }
+        
+    },[])
 
     const fetchData = async ()=>{
-        if (typeof window !== 'undefined') {
-            const Username = localStorage.getItem('Username');
-           setUserName(Username)
-        }
-
+        console.log('Useeffect working')
         if(UserName){
+            console.log(UserName)
             const response = await axios.post('/api/getTodo',{UserName})
             const data = response.data
-            const docs = data.todoData
-            data.forEach(doc => {
-                console.log(doc.data())
-            });
-            setTodos(data)
-            console.log('tooooods',Todos)
+
+            if(data.message){   
+                const docs = data.docArray
+                console.log(docs)
+                
+                    docs.forEach(doc => {
+                        setTodos(Todos =>[...Todos,doc.Todo])
+                        console.log(doc.Todo)
+                    });
+                
+                console.log('tooooods',Todos)
+            }
             setLoggedIn(data.message)
-            data.message ? setLoginAck('Wellcom!! ',UserName): setLoginAck('Session expired Please Login')
+            data.message ? setLoginAck( `Wellcom!! ${UserName}`): setLoginAck('Session expired Please Login')
         }else{
             setLoggedIn(false)
         }
@@ -42,10 +57,11 @@ export default function TodoSection(){
         if(loggedIn){
             const response = await axios.post('/api/storeTodo',{Todo , UserName})
             const data = response.data
-            console.log('todo - ' , data) 
-            console.log(Todos)
-            setTodos([...Todos , data.Todo])
+            const getData = data.Data
+            console.log('todo - ' , getData.Todo) 
             
+            setTodos([...Todos , getData.Todo])
+            console.log(Todos)
             setLoginAck('Wellcom!! ',UserName)
         }else{
             setLoginAck('Do Login ',UserName)
@@ -63,9 +79,12 @@ export default function TodoSection(){
             
             <div className=" bg-white m-3 text-black ">
                 <h1>{loginAck}</h1>
-                {(Todos.length >0 && Todos.map((todoObj)=>{
-                    return<h1>Your Work : {todoObj.Todo}</h1>
-                }))}
+                {loggedIn?
+                    (
+                    (Todos.length >0 && Todos.map((todoObj)=>{
+                        return<h1>Your Work : {todoObj}</h1>})))
+                    :<h1>Please login</h1>    
+                }
             </div>
         </div>
     </>

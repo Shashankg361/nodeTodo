@@ -4,14 +4,24 @@ import { useContext } from "react"
 
 export default function Nav(){
     const {loggedIn , setLoggedIn} = useContext(userState)
-    const session=false
+    //const session=false
+    const logout = ()=>{
+        setLoggedIn(false)
+        localStorage.removeItem('Username')
+        console.log(loggedIn)
+    }
+
     return<>
         <div className="flex" style={{display:'flex', justifyContent:'space-between'}}>
             <div>
                 <h1 className="cursor-pointer">TODO</h1>
             </div>
             <div>
-                <Link href={'../login-register'}><button className="cursor-pointer">{session?<h1>LogOut</h1>:<h1>LogIn/Register</h1>}</button></Link>
+                { loggedIn ? 
+                    <button className="cursor-pointer text-black bg-red-700" onClick={logout}>LogOut</button>
+                    :<Link href={'../login-register'}><button className="cursor-pointer"><h1>Login/Register</h1></button></Link>
+                }
+                
             </div>
         </div>
     </>
