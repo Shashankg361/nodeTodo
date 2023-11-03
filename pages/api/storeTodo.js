@@ -2,7 +2,7 @@ import { firestore } from "@/firebase/handleDatabase"
 import { addDoc, collection, doc, getDoc } from "firebase/firestore"
 //import getTodo from "./getTodo"
 
-export default async (req,res)=>{
+const storeTodoApi = async (req,res)=>{
     if(req.method == 'POST'){
         const {Todo , UserName} = req.body
         const UserData = {Todo :Todo , Username :UserName} 
@@ -35,3 +35,5 @@ const getTodo = async(docId)=>{
     }
     
 }
+
+export default storeTodoApi

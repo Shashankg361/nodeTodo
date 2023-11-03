@@ -7,7 +7,7 @@ const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const secretKey = crypto.randomBytes(32).toString('hex'); // 32 bytes (256 bits)
 
-export default async(req,res)=>{
+const loginApi = async(req,res)=>{
 
     if(req.method === 'POST'){
         const {UserName , Password} =req.body
@@ -107,3 +107,5 @@ const addToken = async(UserName)=>{
             }
         }
 }
+
+export default loginApi

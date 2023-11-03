@@ -2,7 +2,7 @@ import { firestore } from "@/firebase/handleDatabase"
 import { collection, getDocs, query, where } from "firebase/firestore"
 const jwt = require('jsonwebtoken')
 
-export default async(req , res)=>{
+const getTodoApi = async(req , res)=>{
     if(req.method === 'POST'){
         const {UserName} = req.body
         //console.log('gettodo Name ',UserName)
@@ -53,3 +53,5 @@ const getTodoDoc = async (UserName)=>{
     
     return todoData
 }
+
+export default getTodoApi

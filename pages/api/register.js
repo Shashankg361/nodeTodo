@@ -2,7 +2,7 @@ import { firestore } from "@/firebase/handleDatabase"
 import { collection , addDoc } from "firebase/firestore"
 const bcrypt = require('bcrypt')
 
-export default async (req , res)=>{
+const registerApi =  async (req , res)=>{
     if(req.method === "POST"){
         const {Username , Password , Email}  = req.body
         const response = await handleregistration(Username , Password , Email)
@@ -33,3 +33,5 @@ const handleregistration = async (Username , Password , Email)=>{
     }
 
 }
+
+export default registerApi
