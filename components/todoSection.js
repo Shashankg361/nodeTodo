@@ -8,40 +8,33 @@ export default function TodoSection(){
     const [Todos , setTodos] = useState([])
     const [Todo , setTodo] = useState('');
     var UserName = ''
+    const formRef = useRef(null)
     
     useEffect(()=>{
         
         if (typeof window !== 'undefined' && localStorage.getItem('Username') ) {
             //setUserName(localStorage.getItem('Username'))
             UserName= localStorage.getItem('Username')
-            console.log('I am in useEffect',UserName)
         }
         //setUserName(username)
-        console.log(UserName)
         if(UserName){
-            console.log('TodoStore - ',UserName)
             fetchData()
         }
         
     },[])
 
     const fetchData = async ()=>{
-        console.log('Useeffect working')
         if(UserName){
-            console.log(UserName)
             const response = await axios.post('/api/getTodo',{UserName})
             const data = response.data
 
             if(data.message){   
                 const docs = data.docArray
-                console.log(docs)
-                
                     docs.forEach(doc => {
                         setTodos(Todos =>[...Todos,doc.Todo])
-                        console.log(doc.Todo)
+                        //console.log(doc.Todo)
                     });
-                
-                console.log('tooooods',Todos)
+                    
             }
             setLoggedIn(data.message)
             data.message ? setLoginAck( `Wellcom!! ${UserName}`): setLoginAck('Session expired Please Login')
@@ -53,6 +46,7 @@ export default function TodoSection(){
     
     const handleSubmit = async (event)=>{
         event.preventDefault()
+        formRef.current.reset()
         console.log(loggedIn)
         if(loggedIn){
             const response = await axios.post('/api/storeTodo',{Todo , UserName})
@@ -71,9 +65,9 @@ export default function TodoSection(){
     return<>
         <div className="flex flex-col align-center ">
             <div>
-                <form onSubmit={handleSubmit} >
-                    <input type="text" className="text-black" placeholder="Enter Your Todo" onChange={(e)=>setTodo(e.target.value)}></input>
-                    <input type="submit"></input>
+                <form onSubmit={handleSubmit} ref={formRef} >
+                    <input id="GetTodo" type="text" className="text-black mr-2" placeholder="Enter Your Todo" onChange={(e)=>setTodo(e.target.value)}></input>
+                    <input id="GetTodo" type="submit"></input>
                 </form>
             </div>
             
@@ -88,8 +82,4 @@ export default function TodoSection(){
             </div>
         </div>
     </>
-}
-
-export async function getServerSideProps(){
-
 }

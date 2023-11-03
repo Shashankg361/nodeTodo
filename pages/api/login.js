@@ -6,34 +6,30 @@ const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const secretKey = crypto.randomBytes(32).toString('hex'); // 32 bytes (256 bits)
-console.log('Generated secret key:', secretKey);
 
 export default async(req,res)=>{
 
     if(req.method === 'POST'){
         const {UserName , Password} =req.body
-        console.log("username - ",UserName)
         const data = await handleDatabase({UserName , Password})
 
-        //    console.log("snapshot - ",data[0].data())
+        //console.log("snapshot - ",data[0].data())
         if(data){
             var createSession = calculation(data , Password);
         }else{
-            res.json({message :'Get yourself register'})
+            res.json({Username: UserName,message :'Get yourself register'})
         }
         
-        //console.log(data[0].data)
-
         if(createSession){
             try{
                 await addToken(UserName)
                 res.status(200).json({ Username: UserName, message:true});
             }catch(error){
-                res.json({ Username: UserName, message:false})
+                throw error
             }
             
         }else{
-            res.status(401).json({message:"Incorrect Password"})
+            res.json({ Username: UserName, message:false})
         }
     }
 }
@@ -46,16 +42,15 @@ const handleDatabase = async ({UserName , Password})=>{
         const querySanpshot = await getDocs(q);
         if(!querySanpshot.empty){
             const document = querySanpshot.docs
-            console.log('doc',document[0].data())
+            /*console.log('doc',document[0].data())
             document.forEach((doc)=>{
                 console.log('Data ',doc.data())
-            })
+            })*/
             
             return document
         }else{
             return false
         } 
-        
     }
     catch(error){
         console.error(error)
@@ -73,7 +68,7 @@ const calculation = (doc ,Password)=>{
     const loginPassword = Password
 
     const saltedLoginPassword = loginPassword + storedSalt
-    console.log('saltedLoginPassword - ',saltedLoginPassword , 'storedHashedPassword - ',storedHashedPassword )
+    //console.log('saltedLoginPassword - ',saltedLoginPassword , 'storedHashedPassword - ',storedHashedPassword )
 
     const matchedPassword = bcrypt.compareSync(saltedLoginPassword ,storedHashedPassword )
 

@@ -6,19 +6,16 @@ import { useRouter } from "next/router"
 
 export default function Login(){
     const {loggedIn , setLoggedIn} = useContext(userState)
-    var passwordVerified = true
+    var [passwordVerified , setPasswordVerified] = useState(true)
     const [UserName , setUsername] = useState('')
     const [Password , setPassword] = useState('')
     const loginform = useRef(null)
     const router = useRouter()
      useEffect(()=>{
-            console.log('login ',loggedIn)
             if(loggedIn){
                 router.push('/')
         }
     },[loggedIn])
-
-    console.log('user ' , UserName  )
 
     const handleSubmit = async (event) =>{
         try
@@ -27,9 +24,7 @@ export default function Login(){
         const response = await axios.post('/api/login',{UserName , Password})
         localStorage.setItem("Username" , response.data.Username)
         setLoggedIn(response.data.message)
-        passwordVerified = response.data.message
-        //console.log('loooooog', loggedIn)
-        //console.log('message ' , response.data.message)
+        setPasswordVerified(response.data.message)
 
     }catch(error){
         console.error(error)

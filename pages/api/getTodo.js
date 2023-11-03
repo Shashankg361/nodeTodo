@@ -5,24 +5,24 @@ const jwt = require('jsonwebtoken')
 export default async(req , res)=>{
     if(req.method === 'POST'){
         const {UserName} = req.body
-        console.log('gettodo Name ',UserName)
+        //console.log('gettodo Name ',UserName)
         const collectionRef = collection(firestore , 'LoginUsersTokens')
         const q = query(collectionRef , where('Username' , '==' ,UserName ))
         const snapshot = await getDocs(q)
         const document = snapshot.docs
         //console.log('docu ', document)
-        document.forEach((doc)=>{
+        /*document.forEach((doc)=>{
             console.log('Datataaaa - ',doc.data())
-        })
+        })*/
         const data = document[0].data()
         if(!validateToken(data)){
             const docArray = []
-            console.log('enterd ')
+            //console.log('enterd ')
             const todoData = await getTodoDoc(UserName)
             const document = todoData.docs
             document.forEach((doc)=>{
                 docArray.push(doc.data())
-                console.log('tododoooo ',doc.data())
+                //console.log('tododoooo ',doc.data())
             })
             
             res.status(200).json({docArray , message:true})

@@ -6,7 +6,7 @@ export default async (req , res)=>{
     if(req.method === "POST"){
         const {Username , Password , Email}  = req.body
         const response = await handleregistration(Username , Password , Email)
-        console.log(response)
+        //console.log(response)
     }
     res.status(200).json({message:"Successfully registred"})
 

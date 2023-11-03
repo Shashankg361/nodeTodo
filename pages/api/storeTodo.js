@@ -5,10 +5,8 @@ import { addDoc, collection, doc, getDoc } from "firebase/firestore"
 export default async (req,res)=>{
     if(req.method == 'POST'){
         const {Todo , UserName} = req.body
-        console.log('todo - - ',Todo , 'UserName - ' ,UserName)
         const UserData = {Todo :Todo , Username :UserName} 
         const response = await storedata(UserData)
-        console.log('Stored todo data' , response)
         const getResponse = await getTodo(response)
         const StoredTodo = getResponse.data()
         return res.status(200).json({Data: StoredTodo ,message:'Data added succesfully'})
@@ -17,8 +15,8 @@ export default async (req,res)=>{
 const storedata = async(UserData)=>{
     try{
         const collectionRef = collection(firestore , 'TODOs')
-    const storedTodo = await addDoc(collectionRef , UserData)
-    return storedTodo.id
+        const storedTodo = await addDoc(collectionRef , UserData)
+        return storedTodo.id
     }catch(error){
         throw error
     }
