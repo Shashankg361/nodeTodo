@@ -25,7 +25,7 @@ export default function TodoSection(){
 
     const fetchData = async ()=>{
         if(UserName){
-            const response = await axios.post('/api/getTodo',{UserName})
+            const response = await axios.post('https://node-todo-delta.vercel.app/api/getTodo',{UserName})
             const data = response.data
 
             if(data.message){   
@@ -49,7 +49,7 @@ export default function TodoSection(){
         formRef.current.reset()
         console.log(loggedIn)
         if(loggedIn){
-            const response = await axios.post('/api/storeTodo',{Todo , UserName})
+            const response = await axios.post('https://node-todo-delta.vercel.app/api/storeTodo',{Todo , UserName})
             const data = response.data
             const getData = data.Data
             console.log('todo - ' , getData.Todo) 
@@ -63,15 +63,15 @@ export default function TodoSection(){
     }
 
     return<>
-        <div className="flex flex-col align-center ">
+        <div className="flex flex-col items-center justify-center m-4">
             <div>
                 <form onSubmit={handleSubmit} ref={formRef} >
-                    <input id="GetTodo" type="text" className="text-black mr-2" placeholder="Enter Your Todo" onChange={(e)=>setTodo(e.target.value)}></input>
+                    <input id="GetTodo" type="text" className="text-black mr-2 rounded-lg p-2" placeholder="Enter Your Todo" onChange={(e)=>setTodo(e.target.value)}></input>
                     <input id="GetTodo" type="submit"></input>
                 </form>
             </div>
             
-            <div className=" bg-white m-3 text-black ">
+            <div className=" bg-white m-3 text-black p-5">
                 <h1>{loginAck}</h1>
                 {loggedIn?
                     (

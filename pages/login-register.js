@@ -9,8 +9,8 @@ export default function Login_register(){
     const [form , setForm] = useState(true)
     
     return<>
-        <div className="">
-            <button className="p-3 bg-gray-50 border-2 rounded-lg border-red-50 text-black" onClick={()=>{setForm(true)}}>login</button>
+        <div className="m-5">
+            <button className="p-3 bg-gray-50 border-2 rounded-lg border-red-50 text-black mr-3" onClick={()=>{setForm(true)}}>login</button>
             <button onClick={()=>{setForm(false)}}>Register</button>
 
             {form ? <Login  /> :<Register  />}           

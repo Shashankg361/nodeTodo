@@ -18,7 +18,7 @@ export default function Nav(){
             </div>
             <div>
                 { loggedIn ? 
-                    <button className="cursor-pointer text-black bg-red-700" onClick={logout}>LogOut</button>
+                    <button className="cursor-pointer text-black bg-red-900 p-3 rounded" onClick={logout}>LogOut</button>
                     :<Link href={'../login-register'}><button className="cursor-pointer"><h1>Login/Register</h1></button></Link>
                 }
                 

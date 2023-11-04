@@ -16,7 +16,7 @@ export default function Register(){
         console.log("api cAlled")
         console.log(Username , Password , Email);
         try{
-            const response = await axios.post('/api/register',{Username , Password , Email})
+            const response = await axios.post('https://node-todo-delta.vercel.app/api/register',{Username , Password , Email})
             alert(response.data)
 
             // Use the reset method to reset the form
