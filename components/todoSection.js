@@ -59,9 +59,9 @@ export default function TodoSection(){
             const response = await axios.post('https://node-todo-delta.vercel.app/api/storeTodo',{Todo , UserName})
             const data = response.data
             const getData = data.Data
-            console.log('todo - ' , getData.Todo) 
+            console.log('todo - ' , getData.Todo , 'with id ',data.id ,data.message) 
             
-            setTodos({...Todos , [getData.id]:getData.Todo})
+            setTodos({...Todos , [data.id]:getData.Todo})
             setLoginAck('Wellcom!! ',UserName)
         }else{
             setLoginAck('Do Login ',UserName)
@@ -70,6 +70,7 @@ export default function TodoSection(){
 
     const updateTodosState = (key)=>{
         setKey(key)
+        console.log('key ', key)
         UpdateTodofrom.current.classList.remove('hidden')
     }
 

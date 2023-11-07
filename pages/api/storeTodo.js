@@ -10,6 +10,7 @@ const storeTodoApi = async (req,res)=>{
         const response = await storedata(UserData)
         const getResponse = await getTodo(response)
         const StoredTodo = getResponse.data()
+        console.log('idd',getResponse.id)
         return res.status(200).json({Data: StoredTodo , id:getResponse.id,message:'Data added succesfully'})
     }
 }
