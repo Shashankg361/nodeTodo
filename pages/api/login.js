@@ -23,7 +23,7 @@ const loginApi = async(req,res)=>{
         if(createSession){
             try{
                 await addToken(UserName)
-                res.status(200).json({ Username: UserName, message:true});
+                res.status(200).json({ Username: UserName,todoCount:data.todoCount, message:true});
             }catch(error){
                 throw error
             }

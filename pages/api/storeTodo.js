@@ -5,11 +5,12 @@ import { addDoc, collection, doc, getDoc } from "firebase/firestore"
 const storeTodoApi = async (req,res)=>{
     if(req.method == 'POST'){
         const {Todo , UserName} = req.body
+        console.log('user ',UserName)
         const UserData = {Todo :Todo , Username :UserName} 
         const response = await storedata(UserData)
         const getResponse = await getTodo(response)
         const StoredTodo = getResponse.data()
-        return res.status(200).json({Data: StoredTodo ,message:'Data added succesfully'})
+        return res.status(200).json({Data: StoredTodo , id:getResponse.id,message:'Data added succesfully'})
     }
 }
 const storedata = async(UserData)=>{

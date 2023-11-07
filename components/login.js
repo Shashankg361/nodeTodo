@@ -3,7 +3,7 @@ import axios from "axios"
 import { useContext, useEffect, useState } from "react"
 import { useRef } from "react"
 import { useRouter } from "next/router"
-
+export const TodoCount = null
 export default function Login(){
     const {loggedIn , setLoggedIn} = useContext(userState)
     var [passwordVerified , setPasswordVerified] = useState(true)
@@ -15,7 +15,7 @@ export default function Login(){
             if(loggedIn){
                 router.push('/')
         }
-    },[loggedIn])
+    },[loggedIn , router])
 
     const handleSubmit = async (event) =>{
         try
@@ -23,6 +23,7 @@ export default function Login(){
         loginform.current.reset()
         const response = await axios.post('https://node-todo-delta.vercel.app/api/login',{UserName , Password})
         localStorage.setItem("Username" , response.data.Username)
+        localStorage.setItem("count" , response.data.todoCount)
         setLoggedIn(response.data.message)
         setPasswordVerified(response.data.message)
 

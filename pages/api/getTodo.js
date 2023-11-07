@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken')
 const getTodoApi = async(req , res)=>{
     if(req.method === 'POST'){
         const {UserName} = req.body
-        //console.log('gettodo Name ',UserName)
+        console.log('gettodo Name ',UserName)
         const collectionRef = collection(firestore , 'LoginUsersTokens')
         const q = query(collectionRef , where('Username' , '==' ,UserName ))
         const snapshot = await getDocs(q)
@@ -16,16 +16,14 @@ const getTodoApi = async(req , res)=>{
         })*/
         const data = document[0].data()
         if(!validateToken(data)){
-            const docArray = []
-            //console.log('enterd ')
+            const hashmap = new Map()
             const todoData = await getTodoDoc(UserName)
             const document = todoData.docs
             document.forEach((doc)=>{
-                docArray.push(doc.data())
-                //console.log('tododoooo ',doc.data())
+                hashmap.set(doc.id,doc.data().Todo)
             })
-            
-            res.status(200).json({docArray , message:true})
+            const objHashmap = Object.fromEntries(hashmap)
+            res.status(200).json({hashmap:objHashmap , message:true})
         }else{
             res.json({ message: false });1
         }

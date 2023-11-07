@@ -13,8 +13,6 @@ export default function Register(){
 
     const handleregistration = async (event)=>{
         event.preventDefault();
-        console.log("api cAlled")
-        console.log(Username , Password , Email);
         try{
             const response = await axios.post('https://node-todo-delta.vercel.app/api/register',{Username , Password , Email})
             alert(response.data)

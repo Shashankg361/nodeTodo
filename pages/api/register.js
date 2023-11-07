@@ -1,7 +1,7 @@
 import { firestore } from "@/firebase/handleDatabase"
 import { collection , addDoc } from "firebase/firestore"
 const bcrypt = require('bcrypt')
-
+const todoCount = 0
 const registerApi =  async (req , res)=>{
     if(req.method === "POST"){
         const {Username , Password , Email}  = req.body
@@ -21,7 +21,7 @@ const handleregistration = async (Username , Password , Email)=>{
 
     const hashedPassword = bcrypt.hashSync(saltedPassword , saltRounds)
 
-    const userData = {Username , hashedPassword , Email ,salt}
+    const userData = {Username , hashedPassword , Email ,salt ,todoCount }
     const collectionRef = collection(firestore , 'User');
     const addDocs = await addDoc(collectionRef , userData);
     console.log(addDocs.id);
