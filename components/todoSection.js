@@ -145,7 +145,7 @@ export default function TodoSection(){
                 }
             </div>
             <div ref={UpdateTodofrom} className="fixed top-0 left-0 bg-slate-900 opacity-95 flex flex-col justify-center items-center w-screen h-screen hidden">
-                <div className="bg-white opacity-100 p-5 w-2/5 h-1/5 flex-col ">
+                <div className="bg-white opacity-100 p-5 w-auto h-auto flex-col ">
                     <input type="text" className="text-black border-4 border-black rounded-lg m-2" onChange={(e)=>setUpdatedTodo(e.target.value)} placeholder="Update todo"></input>
                     <div className="m-2">
                         <input className="text-black p-2 mr-3 border-4 border-black rounded-lg" onClick={updateTodo} type="submit"></input>
